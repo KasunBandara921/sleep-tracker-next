@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 const Footer = () => {
   return (
-    <footer className='border-t-2 border-gray-200'>
+    <footer className='bg-white border-t border-gray-200 mt-auto'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
         <div className='flex flex-col md:flex-row justify-between items-center'>
           {/* Logo and Tagline */}
@@ -19,19 +19,19 @@ const Footer = () => {
           <div className='flex space-x-4'>
             <Link
               href='/'
-              className='text-gray-700 hover:text-purple-600 text-sm font-medium'
+              className='text-gray-700 hover:text-purple-600 text-sm font-medium transition-colors'
             >
               Home
             </Link>
             <Link
               href='/about'
-              className='text-gray-700 hover:text-purple-600 text-sm font-medium'
+              className='text-gray-700 hover:text-purple-600 text-sm font-medium transition-colors'
             >
               About
             </Link>
             <Link
               href='/contact'
-              className='text-gray-700 hover:text-purple-600 text-sm font-medium'
+              className='text-gray-700 hover:text-purple-600 text-sm font-medium transition-colors'
             >
               Contact
             </Link>
