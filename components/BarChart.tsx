@@ -2,123 +2,110 @@
 
 import { Bar } from 'react-chartjs-2';
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ChartData,
-  ChartOptions,
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
 } from 'chart.js';
 
 // Register Chart.js components
 ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
 );
 
-interface RecordItem {
-  id: string;
-  text: string;
-  amount: number;
-  userId: string;
-  createdAt: Date;
-  date: string;
+// Define the type for a record
+interface Record {
+    date: string; // ISO date string
+    amount: number; // Hours slept
 }
 
-interface BarChartProps {
-  records: RecordItem[];
-}
+const BarChart = ({ records }: { records: Record[] }) => {
+    // Prepare data for the chart
+    const data = {
+        labels: records.map((record) => new Date(record.date).toLocaleDateString()), // Use record dates as labels
+        datasets: [
+            {
+                data: records.map((record) => record.amount), // Use record amounts as data
+                backgroundColor: records.map((record) =>
+                    record.amount < 7
+                        ? 'rgba(255, 99, 132, 0.2)'
+                        : 'rgba(75, 192, 192, 0.2)'
+                ), // Red for < 7, Green for >= 7
+                borderColor: records.map((record) =>
+                    record.amount < 7 ? 'rgba(255, 99, 132, 1)' : 'rgba(75, 192, 192, 1)'
+                ), // Red for < 7, Green for >= 7
+                borderWidth: 1,
+                borderRadius: 2, // Rounded bar edges
+            },
+        ],
+    };
 
-export default function BarChart({ records }: BarChartProps) {
-  // The records are ordered by date desc in the database query.
-  // For standard left-to-right timeline visualization, we reverse them.
-  const sortedRecords = [...records].reverse();
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false, // Remove legend
+            },
+            title: {
+                display: false, // Remove chart title
+            },
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Date',
+                    font: {
+                        size: 14,
+                        weight: 'bold' as const,
+                    },
+                    color: '#2c3e50',
+                },
+                ticks: {
+                    font: {
+                        size: 12, // Adjust x-axis font size
+                    },
+                    color: '#7f8c8d', // Gray x-axis labels
+                },
+                grid: {
+                    display: false, // Hide x-axis grid lines
+                },
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Hours Slept',
+                    font: {
+                        size: 16,
+                        weight: 'bold' as const,
+                    },
+                    color: '#2c3e50',
+                },
+                ticks: {
+                    font: {
+                        size: 12, // Adjust y-axis font size
+                    },
+                    color: '#7f8c8d', // Gray y-axis labels
+                },
+                grid: {
+                    color: '#e0e0e0', // Light gray y-axis grid lines
+                },
+                suggestedMin: 4, // Start y-axis at 4
+                suggestedMax: 10, // Extend y-axis to a larger value
+                beginAtZero: false, // Ensure y-axis starts at zero
+            },
+        },
+    };
 
-  const labels = sortedRecords.map((r) => {
-    const d = new Date(r.date);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  });
+    return <Bar data={data} options={options} />;
+};
 
-  const data: ChartData<'bar'> = {
-    labels,
-    datasets: [
-      {
-        label: 'Sleep Duration (Hours)',
-        data: sortedRecords.map((r) => r.amount),
-        backgroundColor: 'rgba(139, 92, 246, 0.6)', // violet-500 with opacity
-        borderColor: 'rgb(139, 92, 246)',
-        borderWidth: 2,
-        borderRadius: 8,
-        borderSkipped: false,
-        hoverBackgroundColor: 'rgba(236, 72, 153, 0.8)', // pink-500 with opacity
-        hoverBorderColor: 'rgb(236, 72, 153)',
-      },
-    ],
-  };
-
-  const options: ChartOptions<'bar'> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-        labels: {
-          color: '#374151', // gray-700
-          font: {
-            family: 'system-ui, sans-serif',
-            size: 13,
-            weight: 'bold',
-          },
-        },
-      },
-      tooltip: {
-        backgroundColor: '#1f2937', // gray-800
-        titleColor: '#f9fafb',
-        bodyColor: '#f3f4f6',
-        padding: 12,
-        cornerRadius: 8,
-        displayColors: false,
-        callbacks: {
-          afterBody: (context) => {
-            const index = context[0].dataIndex;
-            const record = sortedRecords[index];
-            return record.text ? `Note: ${record.text}` : '';
-          },
-        },
-      },
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          color: '#4b5563', // gray-600
-        },
-      },
-      y: {
-        beginAtZero: true,
-        grid: {
-          color: '#e5e7eb', // gray-200
-        },
-        ticks: {
-          color: '#4b5563', // gray-600
-          callback: (value) => `${value}h`,
-        },
-      },
-    },
-  };
-
-  return (
-    <div className="w-full h-80 md:h-96 relative">
-      <Bar data={data} options={options} />
-    </div>
-  );
-}
+export default BarChart;
