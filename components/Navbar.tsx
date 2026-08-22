@@ -35,6 +35,15 @@ export default async function Navbar() {
               About
             </Link>
 
+            {user && (
+              <Link
+                href='/insight'
+                className='text-gray-700 hover:text-purple-600 px-2 py-1 rounded-md text-sm sm:px-3 sm:py-2 sm:text-base font-medium '
+              >
+                Insight
+              </Link>
+            )}
+
             <Show when="signed-out">
               <SignInButton>
                 <button className='w-full sm:w-auto bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 hover:from-purple-600 hover:via-pink-600 hover:to-red-600 text-white sm:px-4 sm:py-2 px-3 py-1 text-sm sm:text-md rounded-md font-medium cursor-pointer'>
