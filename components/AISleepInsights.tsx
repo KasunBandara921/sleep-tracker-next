@@ -20,7 +20,7 @@ export default function AISleepInsights() {
       } else if (res.insight) {
         setInsight(res.insight);
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
       setError('An unexpected error occurred while analyzing your sleep.');
     } finally {
