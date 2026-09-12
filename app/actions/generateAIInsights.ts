@@ -144,10 +144,10 @@ CRITICAL RULE: Do NOT repeat, list, or print the raw logs in your output. Keep t
     cleanInsight = cleanInsight.trim();
 
     return { insight: cleanInsight, isMocked: false };
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error generating AI Insights:', error);
     return {
-      error: error?.message || 'Failed to process sleep insights.',
+      error: (error as Error)?.message || 'Failed to process sleep insights.',
       isMocked: false,
     };
   }
